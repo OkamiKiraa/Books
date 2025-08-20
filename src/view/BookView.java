@@ -7,3 +7,10 @@ public class BookView {
         return "\"" + book.getTitle() + "\" by " + book.getAuthor();
     }
 }
+
+
+
+
+// ZMIENIC NA STRING FORMAT
+// lepiej by było, żeby zwracało z pojedyńczej, a library view powinien korzystać z bookview...
+//

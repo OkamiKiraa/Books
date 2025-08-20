@@ -1,109 +1,64 @@
 package controller;
 
-import model.*;
-import view.*;
+import model.Book;
+import model.Library;
+import view.BookView;
 
-import java.util.*;
+import java.util.List;
 
 public class LibraryController {
     private final Library library;
-    private final Scanner scanner = new Scanner(System.in);
 
     public LibraryController(Library library) {
         this.library = library;
     }
 
-    public void run() {
-        while (true) {
-            printMenu();
-            String choice = scanner.nextLine();
-
-            switch (choice) {
-                case "1" -> borrowBookMenu();
-                case "2" -> returnBookMenu();
-                case "3" -> searchBooksMenu();
-                case "4" -> addBookMenu();
-                case "5" -> {
-                    System.out.println("Do zobaczenia!");
-                    return;
-                }
-                default -> System.out.println("Nieprawidłowy wybór.");
-            }
-        }
+    public List<Book> searchBooks(String query) {
+        // Zalecenie Senpai - uycie stream().toList() zamiast konstruktora ArrayList
+        return library.searchBooks(query).stream().toList();
     }
 
-    private void printMenu() {
-        System.out.println("""
-            MENU:
-            1. Wypożycz książkę
-            2. Zwróć książkę
-            3. Szukaj książek
-            4. Dodaj książkę do biblioteki
-            5. Zakończ""");
-        System.out.print("Wybierz opcję: ");
+    public List<Book> getBorrowedBooks() {
+        return library.getBorrowedBooks().stream().toList();
     }
 
-    private void borrowBookMenu() {
-        System.out.print("Podaj tytuł książki: ");
-        String title = scanner.nextLine();
-        List<Book> results = new ArrayList<>(library.searchBooks(title));
-
-        if (results.isEmpty()) {
-            System.out.println("Nie znaleziono książki.");
-            return;
+    public String borrowBook(Book book) {
+        if (library.isBorrowed(book)) {
+            return "Błąd: Ta książka jest już wypożyczona.";
         }
-        System.out.println("Znalezione książki:");
-        System.out.println(LibraryView.showBooks(results));
-
-        System.out.print("Wybierz numer do wypożyczenia (0 = anuluj): ");
-        int choice = Integer.parseInt(scanner.nextLine());
-        if (choice >= 1 && choice <= results.size()) {
-            Book book = results.get(choice - 1);
-            if (library.isBorrowed(book)) {
-                System.out.println("Książka już wypożyczona.");
-            } else {
-                library.borrowBook(book);
-                System.out.println("Wypożyczono: " + BookView.showBook(book));
-            }
+        if (library.borrowBook(book)) {
+            return "Pomyślnie wypożyczono: " + BookView.showBook(book);
         }
+        return "Błąd: Nie udało się wypożyczyć książki.";
     }
 
-    private void returnBookMenu() {
-        List<Book> borrowed = new ArrayList<>(library.getBorrowedBooks());
-        if (borrowed.isEmpty()) {
-            System.out.println("Nie masz wypożyczonych książek.");
-            return;
+    public String returnBook(Book book) {
+        if (library.returnBook(book)) {
+            return "Pomyślnie zwrócono: " + BookView.showBook(book);
         }
-        System.out.println("Twoje wypożyczone książki:");
-        System.out.println(LibraryView.showBooks(borrowed));
-
-        System.out.print("Wybierz numer książki do zwrotu: ");
-        int choice = Integer.parseInt(scanner.nextLine());
-        if (choice >= 1 && choice <= borrowed.size()) {
-            Book book = borrowed.get(choice - 1);
-            library.returnBook(book);
-            System.out.println("Zwrócono: " + BookView.showBook(book));
-        }
+        return "Błąd: Tej książki nie było na liście wypożyczonych.";
     }
 
-    private void searchBooksMenu() {
-        System.out.print("Podaj tytuł lub autora: ");
-        String query = scanner.nextLine();
-        List<Book> results = new ArrayList<>(library.searchBooks(query));
-
-        System.out.println(LibraryView.showBooks(results));
-    }
-
-    private void addBookMenu() {
-        System.out.print("Tytuł: ");
-        String title = scanner.nextLine();
-        System.out.print("Autor: ");
-        String author = scanner.nextLine();
-
+    public String addBook(String title, String author) {
+        if (title.isBlank() || author.isBlank()) {
+            return "Błąd: Tytuł i autor nie mogą być puste.";
+        }
         if (library.addBook(title, author)) {
-            System.out.println("Dodano książkę: " + title);
+            return "Pomyślnie dodano książkę: \"" + title + "\"";
         } else {
-            System.out.println("Taka książka już istnieje.");
+            return "Błąd: Taka książka już istnieje w bibliotece.";
         }
     }
 }
+
+
+// senpai mówi, że coś mi nie wyszło, więc... chodzi o to, że nazywam klasy library controller , czyli chciałbym zarządzać library, a nasze library ma books i borrow books, a to co tu mam, to tak na serio te metody oznaczają
+// w library controller, ma zarządzać biblioteką, a biblioteka zarządza też książkami, bo ma swoje książki , więc my chcemy w library controller chcemy mieć operacje, aby je wykonać na bibliotece, a w mainie mieć pętle z zapytaniami do menu, bo teraz dałem , że library controller jest jednocześnie kontrolerem i viewierem (lol)
+// nie robić app controller i app view, bo to ponad miarę (hmm), ale chodzi o to, że jak mam pętle RUN to ma być w MAIN,
+// library controller powinien mieć połączenie z VIEW... hmm, klaps senpaiowi w tyłek? :)))))))))
+// nie robić konstruktorem array list , tylko toarray, a jak chce mieć to list, stream.tolist
+
+// REBASE , conflicts - ogarnąć w gicie... konflikty mogłyby się mocno gryźć, założeniem jest to, że zaczynając nowego taska nie zaciągam zmian ()w diealny mświecie), tylko zaciągam od dev branchu, nasz main/master jest naszym branchem releasowanym, żeby nie było kłopotu
+// przerzucić METODE RUN I WYJEBAĆ Z LIBRARY CONTRELER bede mial , Z PRINT MENU fajnie byłoby dać do view, (senpai mówi, ja robię), ale raczej do maina w metodzie, metody poniżej print menu, wolimy zeby controller library wytrzucil w metodzie return, a do main co mam na samym początku ze scannera i systema początkowego
+// 49 linijka , 72 linia, 92 , linia, ogarnąć library controller, zamiast konstruktora to po stworzeniu przerzucić na to list.
+// dodanie zapisu i odczytu do pliku, zapis stanu library do pliku .txt albo .csv i odczyt przy starcie, dodać klasę user, zamiast na libarry borrowed books, byłby

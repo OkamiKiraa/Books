@@ -31,6 +31,3 @@ public class Book {
         return Objects.hash(title.toLowerCase(), author.toLowerCase());
     }
 }
-
-
-// Usunąłem wszystkie stepy - dla przejrzystości.
