@@ -1,4 +1,4 @@
-- odano Model
+- dodano Model
 - dodano Book
 - dodano Library
 - dodano View
