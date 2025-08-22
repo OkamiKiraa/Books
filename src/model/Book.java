@@ -15,13 +15,22 @@ public class Book {
         return new Book(title, author);
     }
 
-    public String getTitle() { return title; }
-    public String getAuthor() { return author; }
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Book other)) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Book other)) {
+            return false;
+        }
         return title.equalsIgnoreCase(other.title) &&
                 author.equalsIgnoreCase(other.author);
     }

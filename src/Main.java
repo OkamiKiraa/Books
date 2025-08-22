@@ -7,24 +7,30 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+
+    private static final String OPTION_BORROW = "1";
+    private static final String OPTION_RETURN = "2";
+    private static final String OPTION_SEARCH = "3";
+    private static final String OPTION_ADD = "4";
+    private static final String OPTION_EXIT = "5";
+
     public static void main(String[] args) {
         Library library = new Library();
         importBooks(library);
         LibraryController controller = new LibraryController(library);
         Scanner scanner = new Scanner(System.in);
 
-        // Główna pętla aplikacji...
         while (true) {
-            System.out.println(LibraryView.getMenu());
+            System.out.println(getMenu());
             System.out.print("Wybierz opcję: ");
             String choice = scanner.nextLine();
 
             switch (choice) {
-                case "1" -> borrowBook(controller, scanner);
-                case "2" -> returnBook(controller, scanner);
-                case "3" -> searchBooks(controller, scanner);
-                case "4" -> addBook(controller, scanner);
-                case "5" -> {
+                case OPTION_BORROW -> borrowBook(controller, scanner);
+                case OPTION_RETURN -> returnBook(controller, scanner);
+                case OPTION_SEARCH -> searchBooks(controller, scanner);
+                case OPTION_ADD -> addBook(controller, scanner);
+                case OPTION_EXIT -> {
                     System.out.println("Do zobaczenia!");
                     return;
                 }
@@ -32,6 +38,16 @@ public class Main {
             }
             System.out.println();
         }
+    }
+
+    private static String getMenu() {
+        return """
+            MENU:
+            1. Wypożycz książkę
+            2. Zwróć książkę
+            3. Szukaj książek
+            4. Dodaj książkę do biblioteki
+            5. Zakończ""";
     }
 
     private static void borrowBook(LibraryController controller, Scanner scanner) {
@@ -48,14 +64,14 @@ public class Main {
         System.out.println(LibraryView.showBooks(results));
 
         System.out.print("Wybierz numer książki do wypożyczenia (0 = anuluj): ");
-        int bookIndex = Integer.parseInt(scanner.nextLine());
+        int choice = Integer.parseInt(scanner.nextLine());
 
-        if (bookIndex > 0 && bookIndex <= results.size()) {
-            Book selectedBook = results.get(bookIndex - 1);
+        if (isValidChoice(choice, results.size())) {
+            Book selectedBook = results.get(choice - 1);
             String message = controller.borrowBook(selectedBook);
             System.out.println(message);
         } else {
-            System.out.println("Anulowano operację.");
+            System.out.println("Anulowano operację lub podano nieprawidłowy numer.");
         }
     }
 
@@ -71,14 +87,14 @@ public class Main {
         System.out.println(LibraryView.showBooks(borrowedBooks));
 
         System.out.print("Wybierz numer książki do zwrotu (0 = anuluj): ");
-        int bookIndex = Integer.parseInt(scanner.nextLine());
+        int choice = Integer.parseInt(scanner.nextLine());
 
-        if (bookIndex > 0 && bookIndex <= borrowedBooks.size()) {
-            Book selectedBook = borrowedBooks.get(bookIndex - 1);
+        if (isValidChoice(choice, borrowedBooks.size())) {
+            Book selectedBook = borrowedBooks.get(choice - 1);
             String message = controller.returnBook(selectedBook);
             System.out.println(message);
         } else {
-            System.out.println("Anulowano operację.");
+            System.out.println("Anulowano operację lub podano nieprawidłowy numer.");
         }
     }
 
@@ -97,6 +113,10 @@ public class Main {
 
         String message = controller.addBook(title, author);
         System.out.println(message);
+    }
+
+    private static boolean isValidChoice(int choice, int listSize) {
+        return choice > 0 && choice <= listSize;
     }
 
     private static void importBooks(Library library) {
@@ -118,7 +138,7 @@ public class Main {
         library.addBook("The Chronicles of Narnia", "C.S. Lewis");
         library.addBook("Dracula", "Bram Stoker");
         library.addBook("Frankenstein", "Mary Shelley");
-        library.addBook("The Hitchhiker’s Guide to the Galaxy", "Douglas Adams");
+        library.addBook("The Hitchhiker's Guide to the Galaxy", "Douglas Adams");
         library.addBook("The Shining", "Stephen King");
     }
 }

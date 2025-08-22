@@ -3,6 +3,7 @@ package model;
 import java.util.*;
 
 public class Library {
+
     private final Set<Book> books = new HashSet<>();
     private final Set<Book> borrowedBooks = new HashSet<>();
 
@@ -11,8 +12,12 @@ public class Library {
     }
 
     public boolean borrowBook(Book book) {
-        if (!books.contains(book)) return false;
-        if (borrowedBooks.contains(book)) return false;
+        if (!books.contains(book)) {
+            return false;
+        }
+        if (borrowedBooks.contains(book)) {
+            return false;
+        }
         borrowedBooks.add(book);
         return true;
     }
@@ -22,19 +27,23 @@ public class Library {
     }
 
     public Set<Book> searchBooks(String query) {
-        String lower = query.toLowerCase();
+        String lowerQuery = query.toLowerCase();
         Set<Book> matches = new HashSet<>();
-        for (Book b : books) {
-            if (b.getTitle().toLowerCase().contains(lower) ||
-                    b.getAuthor().toLowerCase().contains(lower)) {
-                matches.add(b);
+        for (Book book : books) {
+            if (bookMatchesQuery(book, lowerQuery)) {
+                matches.add(book);
             }
         }
         return matches;
     }
 
+    private static boolean bookMatchesQuery(Book book, String lowerQuery) {
+        return book.getTitle().toLowerCase().contains(lowerQuery) ||
+                book.getAuthor().toLowerCase().contains(lowerQuery);
+    }
+
     public Set<Book> getBorrowedBooks() {
-        return new HashSet<>(borrowedBooks);
+        return borrowedBooks;
     }
 
     public boolean isBorrowed(Book book) {
