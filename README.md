@@ -6,8 +6,9 @@ Funkcjonalność:
 - wzorzec projektowy MVC (Model-View-Controller).
 
 Instrukcja uruchomienia:
+
 Wymagania:
-- kava 17 lub nowsza
+- java 17 lub nowsza
 - kompilator javac (wbudowany w JDK, np. posłużyć może intelJ)
 
 Przykład użycia
