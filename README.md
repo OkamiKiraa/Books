@@ -1,27 +1,24 @@
-- dodano Model
-- dodano Book
-- dodano Library
-- dodano View
-- dodano BookView
-- dodano Library View
-- dodano Controller
+Biblioteka to konsolowa aplikacja do zarządzania systemem bibliotecznym napisana w języku Java. Umożliwia użytkownikowi podstawowe operacje biblioteczne takie jak wypożyczanie książek, zwracanie, wyszukiwanie w katalogu oraz dodawanie nowych pozycji do kolekcji.
+Funkcjonalność:
+- java 17+ (wykorzystuje pattern matching w instanceof, text blocks, record pattern),
+- collections Framework (HashSet, Stream API),
+- scanner do obsługi wejścia,
+- wzorzec projektowy MVC (Model-View-Controller).
 
-Refaktoryzacja całego kodu.
+Instrukcja uruchomienia:
+Wymagania:
+- kava 17 lub nowsza
+- kompilator javac (wbudowany w JDK, np. posłużyć może intelJ)
 
-//
-- Refaktoryzacja ,poprawa struktury.
-Klasa Main
-- przejęcie kontroli nad główną pętlą programu,
-- wywoływanie metod kontrolera i wyświetlanie wyników zwróconych przez kontroler/widok.
+Przykład użycia
+Po uruchomieniu aplikacji zostanie wyświetlone menu:
+text
+MENU:
+1. Wypożycz książkę
+2. Zwróć książkę
+3. Szukaj książek
+4. Dodaj książkę do biblioteki
+5. Zakończ
+Wybierz opcję: 
 
-Klasa LibraryController
-- usunięcie całej logiki związanej z interfejsem (brak Scanner i System.out).
-- metody nie wyświetlają danych, lecz zwracają przetworzone wyniki (np. String z komunikatem, List<Book>).
-- działa jako pośrednik między Main a Library.
-
-LibraryView
-- usunięcie metod drukujących na konsolę (zmiana printMenu na getMenu zwracające String).
-- odpowiedzialność ograniczona wyłącznie do formatowania danych na tekst.
-
-Inne zmiany
-- Zastosowanie `stream().toList()`.
+Aplikacja jest preładowana tytułami literatury i gotowa do użycia od pierwszego uruchomienia.
