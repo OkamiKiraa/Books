@@ -1,8 +1,12 @@
-import java.util.*;
+import controller.LibraryController;
+import model.Book;
+import model.Library;
+import view.LibraryView;
+
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
-    private static final String YES = "TAK";
-    private static final String NO = "NIE";
 
     private static final String OPTION_BORROW = "1";
     private static final String OPTION_RETURN = "2";
@@ -12,194 +16,110 @@ public class Main {
 
     public static void main(String[] args) {
         Library library = new Library();
+        importBooks(library);
+        LibraryController controller = new LibraryController(library);
         Scanner scanner = new Scanner(System.in);
 
-        importedBooks(library);
-        loop(scanner, library);
-    }
-
-    private static void loop(Scanner scanner, Library library) {
         while (true) {
-            printMenu();
+            System.out.println(getMenu());
+            System.out.print("Wybierz opcję: ");
             String choice = scanner.nextLine();
 
             switch (choice) {
-                case OPTION_BORROW -> borrowBookMenu(scanner, library);
-                case OPTION_RETURN -> returnBookMenu(scanner, library);
-                case OPTION_SEARCH -> searchBooksMenu(scanner, library);
-                case OPTION_ADD -> addBookMenu(scanner, library);
+                case OPTION_BORROW -> borrowBook(controller, scanner);
+                case OPTION_RETURN -> returnBook(controller, scanner);
+                case OPTION_SEARCH -> searchBooks(controller, scanner);
+                case OPTION_ADD -> addBook(controller, scanner);
                 case OPTION_EXIT -> {
                     System.out.println("Do zobaczenia!");
                     return;
                 }
-                default -> System.out.println("Nieprawidłowy wybór.");
+                default -> System.out.println("Nieprawidłowy wybór książki. Spróbuj ponownie.");
             }
+            System.out.println();
         }
     }
 
-    private static void printMenu() {
-        System.out.println("""
+    private static String getMenu() {
+        return """
             MENU:
             1. Wypożycz książkę
             2. Zwróć książkę
             3. Szukaj książek
             4. Dodaj książkę do biblioteki
-            5. Zakończ""");
-
-        System.out.print("Wybierz opcję: ");
+            5. Zakończ""";
     }
 
-    private static void borrowBookMenu(Scanner scanner, Library library) {
-        while (true) {
-            System.out.print("Podaj tytuł książki do wypożyczenia: ");
-            String borrowTitle = scanner.nextLine();
-            List<Book> matchedBooks = new ArrayList<>(library.searchBooks(borrowTitle));
+    private static void borrowBook(LibraryController controller, Scanner scanner) {
+        System.out.print("Podaj tytuł książki do wyszukania: ");
+        String query = scanner.nextLine();
+        List<Book> results = controller.searchBooks(query);
 
-            if (matchedBooks.isEmpty()) {
-                System.out.println("Nie znaleziono książki.");
-            } else if (matchedBooks.size() == 1) {
-                confirmAndBorrow(scanner, library, matchedBooks.get(0));
-            } else {
-                chooseAndBorrow(scanner, library, matchedBooks);
-            }
-
-            System.out.print(String.format("Czy chcesz wypożyczyć kolejną książkę? (%s/%s): ", YES, NO));
-            if (!scanner.nextLine().trim().equalsIgnoreCase(YES)) break;
+        if (results.isEmpty()) {
+            System.out.println("Nie znaleziono książki pasującej do zapytania.");
+            return;
         }
-    }
 
-    private static void confirmAndBorrow(Scanner scanner, Library library, Book book) {
-        if (library.isBorrowed(book)) {
-            System.out.println(String.format("Ta książka jest już wypożyczona: %s", book));
+        System.out.println("Znalezione książki:");
+        System.out.println(LibraryView.showBooks(results));
+
+        System.out.print("Wybierz numer książki do wypożyczenia (0 = anuluj): ");
+        int choice = Integer.parseInt(scanner.nextLine());
+
+        if (isValidChoice(choice, results.size())) {
+            Book selectedBook = results.get(choice - 1);
+            String message = controller.borrowBook(selectedBook);
+            System.out.println(message);
         } else {
-            System.out.println(String.format("Znaleziono książkę: %s", book));
-            System.out.print(String.format("Czy chcesz ją wypożyczyć? (%s/%s): ", YES, NO));
-            if (scanner.nextLine().trim().equalsIgnoreCase(YES)) {
-                library.borrowBook(book);
-            } else {
-                System.out.println("Anulowano wypożyczenie.");
-            }
+            System.out.println("Anulowano operację lub podano nieprawidłowy numer.");
         }
     }
 
-    private static void chooseAndBorrow(Scanner scanner, Library library, List<Book> matchedBooks) {
-        System.out.println("Znaleziono kilka książek pasujących do tytułu:");
-        for (int i = 0; i < matchedBooks.size(); i++) {
-            String status = library.isBorrowed(matchedBooks.get(i)) ? " (wypożyczona)" : "";
-            System.out.println(String.format("%d. %s%s", i + 1, matchedBooks.get(i), status));
-        }
+    private static void returnBook(LibraryController controller, Scanner scanner) {
+        List<Book> borrowedBooks = controller.getBorrowedBooks();
 
-        while (true) {
-            System.out.print("Wybierz numer książki do wypożyczenia lub wpisz 0, aby wrócić: ");
-            try {
-                int choiceNum = Integer.parseInt(scanner.nextLine());
-                if (choiceNum == 0) break;
-                if (choiceNum >= 1 && choiceNum <= matchedBooks.size()) {
-                    confirmAndBorrow(scanner, library, matchedBooks.get(choiceNum - 1));
-                    break;
-                } else {
-                    System.out.println("Nieprawidłowy numer.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Wprowadź poprawny numer.");
-            }
-        }
-    }
-
-    private static void returnBookMenu(Scanner scanner, Library library) {
-        List<Book> borrowed = new ArrayList<>(library.getBorrowedBooks());
-        if (borrowed.isEmpty()) {
-            System.out.println("Nie masz wypożyczonych książek.");
+        if (borrowedBooks.isEmpty()) {
+            System.out.println("Nie masz aktualnie żadnych wypożyczonych książek.");
             return;
         }
 
         System.out.println("Twoje wypożyczone książki:");
-        for (int i = 0; i < borrowed.size(); i++) {
-            System.out.println(String.format("%d. %s", i + 1, borrowed.get(i)));
-        }
+        System.out.println(LibraryView.showBooks(borrowedBooks));
 
-        System.out.print("Wpisz numer książki do zwrotu lub fragment tytułu: ");
-        String input = scanner.nextLine();
+        System.out.print("Wybierz numer książki do zwrotu (0 = anuluj): ");
+        int choice = Integer.parseInt(scanner.nextLine());
 
-        try {
-            int num = Integer.parseInt(input);
-            if (num >= 1 && num <= borrowed.size()) {
-                library.returnBook(borrowed.get(num - 1));
-            } else {
-                System.out.println("Nieprawidłowy numer.");
-            }
-        } catch (NumberFormatException e) {
-            List<Book> matches = new ArrayList<>(library.searchBorrowedByTitle(input));
-            if (matches.isEmpty()) {
-                System.out.println("Nie znaleziono wypożyczonej książki pasującej do tego tytułu.");
-            } else if (matches.size() == 1) {
-                library.returnBook(matches.get(0));
-            } else {
-                System.out.println("Znaleziono kilka pasujących książek:");
-                for (int i = 0; i < matches.size(); i++) {
-                    System.out.println(String.format("%d. %s", i + 1, matches.get(i)));
-                }
-                System.out.print("Wybierz numer książki do zwrotu: ");
-                try {
-                    int choiceNum = Integer.parseInt(scanner.nextLine());
-                    if (choiceNum >= 1 && choiceNum <= matches.size()) {
-                        library.returnBook(matches.get(choiceNum - 1));
-                    } else {
-                        System.out.println("Nieprawidłowy numer.");
-                    }
-                } catch (NumberFormatException ex) {
-                    System.out.println("Nieprawidłowe dane.");
-                }
-            }
-        }
-    }
-
-    private static void searchBooksMenu(Scanner scanner, Library library) {
-        System.out.print("Podaj fragment tytułu lub autora: ");
-        String searchTerm = scanner.nextLine();
-        List<Book> results = new ArrayList<>(library.searchBooks(searchTerm));
-
-        if (results.isEmpty()) {
-            System.out.println("Brak książek pasujących do zapytania.");
+        if (isValidChoice(choice, borrowedBooks.size())) {
+            Book selectedBook = borrowedBooks.get(choice - 1);
+            String message = controller.returnBook(selectedBook);
+            System.out.println(message);
         } else {
-            System.out.println("Znalezione książki:");
-            for (int i = 0; i < results.size(); i++) {
-                String status = library.isBorrowed(results.get(i)) ? " (wypożyczona)" : "";
-                System.out.println(String.format("%d. %s%s", i + 1, results.get(i), status));
-            }
-
-            while (true) {
-                System.out.print("Wybierz numer książki do wypożyczenia lub wpisz 0, aby wrócić do menu: ");
-                try {
-                    int choiceNum = Integer.parseInt(scanner.nextLine());
-                    if (choiceNum == 0) break;
-                    if (choiceNum >= 1 && choiceNum <= results.size()) {
-                        confirmAndBorrow(scanner, library, results.get(choiceNum - 1));
-                        break;
-                    } else {
-                        System.out.println("Nieprawidłowy numer.");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Wprowadź poprawny numer.");
-                }
-            }
+            System.out.println("Anulowano operację lub podano nieprawidłowy numer.");
         }
     }
 
-    private static void addBookMenu(Scanner scanner, Library library) {
+    private static void searchBooks(LibraryController controller, Scanner scanner) {
+        System.out.print("Podaj tytuł lub autora do wyszukania: ");
+        String query = scanner.nextLine();
+        List<Book> results = controller.searchBooks(query);
+        System.out.println(LibraryView.showBooks(results));
+    }
+
+    private static void addBook(LibraryController controller, Scanner scanner) {
         System.out.print("Podaj tytuł nowej książki: ");
-        String newTitle = scanner.nextLine();
+        String title = scanner.nextLine();
         System.out.print("Podaj autora nowej książki: ");
-        String newAuthor = scanner.nextLine();
+        String author = scanner.nextLine();
 
-        if (library.addBook(newTitle, newAuthor)) {
-            System.out.println(String.format("Dodano książkę: \"%s\" by %s", newTitle, newAuthor));
-        } else {
-            System.out.println("Książka o takim tytule i autorze już istnieje w bibliotece...");
-        }
+        String message = controller.addBook(title, author);
+        System.out.println(message);
     }
 
-    private static void importedBooks(Library library) {
+    private static boolean isValidChoice(int choice, int listSize) {
+        return choice > 0 && choice <= listSize;
+    }
+
+    private static void importBooks(Library library) {
         library.addBook("To Kill a Mockingbird", "Harper Lee");
         library.addBook("1984", "George Orwell");
         library.addBook("The Great Gatsby", "F. Scott Fitzgerald");
@@ -218,7 +138,7 @@ public class Main {
         library.addBook("The Chronicles of Narnia", "C.S. Lewis");
         library.addBook("Dracula", "Bram Stoker");
         library.addBook("Frankenstein", "Mary Shelley");
-        library.addBook("The Hitchhiker’s Guide to the Galaxy", "Douglas Adams");
+        library.addBook("The Hitchhiker's Guide to the Galaxy", "Douglas Adams");
         library.addBook("The Shining", "Stephen King");
     }
 }
