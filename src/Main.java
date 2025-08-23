@@ -34,7 +34,7 @@ public class Main {
                     System.out.println("Do zobaczenia!");
                     return;
                 }
-                default -> System.out.println("Nieprawidłowy wybór. Spróbuj ponownie.");
+                default -> System.out.println("Nieprawidłowy wybór książki. Spróbuj ponownie.");
             }
             System.out.println();
         }
