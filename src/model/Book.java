@@ -3,6 +3,7 @@ package model;
 import java.util.Objects;
 
 public class Book {
+
     private final String title;
     private final String author;
 
