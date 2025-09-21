@@ -49,4 +49,8 @@ public class Library {
     public boolean isBorrowed(Book book) {
         return borrowedBooks.contains(book);
     }
+
+    public Set<Book> getAllBooks() {
+        return books;
+    }
 }
