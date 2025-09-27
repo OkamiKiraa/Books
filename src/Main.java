@@ -4,7 +4,8 @@ import model.Library;
 import view.LibraryView;
 import java.util.List;
 import java.util.Scanner;
-import util.FileManager;
+import managers.FileManager;
+import managers.StorageHandler;
 
 public class Main {
     private static final String OPTION_BORROW = "1";
@@ -17,7 +18,8 @@ public class Main {
 
     public static void main(String[] args) {
         Library library = new Library();
-        FileManager.loadBooks(library);
+        StorageHandler fileManager = new FileManager();
+        fileManager.loadBooks(library);
         LibraryController controller = new LibraryController(library);
         Scanner scanner = new Scanner(System.in);
 
@@ -31,10 +33,10 @@ public class Main {
                 case OPTION_SEARCH -> searchBooks(controller, scanner);
                 case OPTION_ADD -> {
                     addBook(controller, scanner);
-                    FileManager.saveBooks(library);
+                    fileManager.saveBooks(library);
                 }
                 case OPTION_EXIT -> {
-                    FileManager.saveBooks(library);
+                    fileManager.saveBooks(library);
                     System.out.println("Do zobaczenia!");
                     return;
                 }

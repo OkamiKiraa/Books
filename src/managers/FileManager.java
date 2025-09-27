@@ -1,14 +1,14 @@
-package util;
+package managers;
 
 import model.Book;
 import model.Library;
 import java.io.*;
 import java.util.Set;
 
-public class FileManager {
+public class FileManager implements StorageHandler {
     private static final String BOOKS_FILE = "books.txt";
 
-    public static void saveBooks(Library library) {
+    public void saveBooks(Library library) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(BOOKS_FILE))) {
             Set<Book> allBooks = library.getAllBooks();
             for (Book book : allBooks) {
@@ -19,7 +19,7 @@ public class FileManager {
         }
     }
 
-    public static void loadBooks(Library library) {
+    public void loadBooks(Library library) {
         File file = new File(BOOKS_FILE);
         if (!file.exists()) {
             return;
