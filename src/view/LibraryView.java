@@ -1,6 +1,7 @@
 package view;
 
 import model.Book;
+
 import java.util.Collection;
 
 public class LibraryView {
