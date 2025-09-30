@@ -1,11 +1,16 @@
 import controller.LibraryController;
+
 import model.Book;
 import model.Library;
 import view.LibraryView;
+
 import java.util.List;
 import java.util.Scanner;
+
 import managers.FileManager;
 import managers.StorageHandler;
+import managers.LanguageManager;
+import managers.SupportedLanguage;
 
 public class Main {
     private static final String OPTION_BORROW = "1";
@@ -14,9 +19,14 @@ public class Main {
     private static final String OPTION_ADD = "4";
     private static final String OPTION_EXIT = "5";
     private static final String OPTION_HELP = "6";
-    private static final String OPTION_HELP_TEXT = "pomoc";
+    private static final String OPTION_HELP_TEXT = "help";
+
+    private static LanguageManager languageManager;
 
     public static void main(String[] args) {
+        languageManager = LanguageManager.getInstance();
+        selectLanguage();
+
         Library library = new Library();
         StorageHandler fileManager = new FileManager();
         fileManager.loadBooks(library);
@@ -24,9 +34,10 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println(getMenu());
-            System.out.print("Wybierz opcję: ");
+            System.out.println(languageManager.getMessage("menu.display"));
+            System.out.print(languageManager.getMessage("menu.choose"));
             String choice = scanner.nextLine();
+
             switch (choice) {
                 case OPTION_BORROW -> borrowBook(controller, scanner);
                 case OPTION_RETURN -> returnBook(controller, scanner);
@@ -37,90 +48,102 @@ public class Main {
                 }
                 case OPTION_EXIT -> {
                     fileManager.saveBooks(library);
-                    System.out.println("Do zobaczenia!");
+                    System.out.println(languageManager.getMessage("general.goodbye"));
+                    scanner.close();
                     return;
                 }
                 case OPTION_HELP, OPTION_HELP_TEXT -> showHelp(scanner);
-                default -> System.out.println("Nieprawidłowy wybór książki. Spróbuj ponownie.");
+                default -> System.out.println(languageManager.getMessage("general.invalid"));
             }
             System.out.println();
         }
     }
 
-    private static String getMenu() {
-        return """
-            MENU:
-            1. Wypożycz książkę
-            2. Zwróć książkę
-            3. Szukaj książek
-            4. Dodaj książkę do biblioteki
-            5. Zakończ
-            6. Pomoc""";
+    private static void selectLanguage() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println(languageManager.getMessage("language.select"));
+        System.out.print(languageManager.getMessage("language.choice"));
+
+        String choice = scanner.nextLine();
+
+        if ("2".equals(choice)) {
+            languageManager.setLanguage(SupportedLanguage.POLISH);
+        } else {
+            languageManager.setLanguage(SupportedLanguage.ENGLISH);
+        }
     }
 
     private static void showHelp(Scanner scanner) {
-        System.out.println("=== POMOC ===");
-        System.out.println("1. Wypożycz książkę - wpisz tytuł lub fragment tytułu, wybierz książkę z listy");
-        System.out.println("2. Zwróć książkę - zobacz swoje wypożyczone książki i wybierz którą zwrócić");
-        System.out.println("3. Szukaj książek - znajdź książki po tytule lub autorze");
-        System.out.println("4. Dodaj książkę - dodaj nową książkę do biblioteki");
-        System.out.println("5. Zakończ - wyjdź z aplikacji");
-
-        System.out.print("\nNaciśnij Enter aby wrócić do menu...");
+        System.out.println(languageManager.getMessage("help.display"));
+        System.out.print(languageManager.getMessage("help.press"));
         scanner.nextLine();
     }
 
     private static void borrowBook(LibraryController controller, Scanner scanner) {
-        System.out.print("Podaj tytuł książki do wyszukania: ");
+        System.out.print(languageManager.getMessage("borrow.enter"));
         String query = scanner.nextLine();
         List<Book> results = controller.searchBooks(query);
+
         if (results.isEmpty()) {
-            System.out.println("Nie znaleziono książki pasującej do zapytania.");
+            System.out.println(languageManager.getMessage("general.no_books_found"));
             return;
         }
-        System.out.println("Znalezione książki:");
+
+        System.out.println(languageManager.getMessage("borrow.found"));
         System.out.println(LibraryView.showBooks(results));
-        System.out.print("Wybierz numer książki do wypożyczenia (0 = anuluj): ");
-        int choice = Integer.parseInt(scanner.nextLine());
-        if (isValidChoice(choice, results.size())) {
-            Book selectedBook = results.get(choice - 1);
-            String message = controller.borrowBook(selectedBook);
-            System.out.println(message);
-        } else {
-            System.out.println("Anulowano operację lub podano nieprawidłowy numer.");
+        System.out.print(languageManager.getMessage("borrow.choose"));
+
+        try {
+            int choice = Integer.parseInt(scanner.nextLine());
+            if (isValidChoice(choice, results.size())) {
+                Book selectedBook = results.get(choice - 1);
+                String message = controller.borrowBook(selectedBook);
+                System.out.println(message);
+            } else {
+                System.out.println(languageManager.getMessage("borrow.canceled"));
+            }
+        } catch (NumberFormatException e) {
+            System.out.println(languageManager.getMessage("borrow.canceled"));
         }
     }
 
     private static void returnBook(LibraryController controller, Scanner scanner) {
         List<Book> borrowedBooks = controller.getBorrowedBooks();
         if (borrowedBooks.isEmpty()) {
-            System.out.println("Nie masz aktualnie żadnych wypożyczonych książek.");
+            System.out.println(languageManager.getMessage("return.no_books"));
             return;
         }
-        System.out.println("Twoje wypożyczone książki:");
+
+        System.out.println(languageManager.getMessage("return.your_books"));
         System.out.println(LibraryView.showBooks(borrowedBooks));
-        System.out.print("Wybierz numer książki do zwrotu (0 = anuluj): ");
-        int choice = Integer.parseInt(scanner.nextLine());
-        if (isValidChoice(choice, borrowedBooks.size())) {
-            Book selectedBook = borrowedBooks.get(choice - 1);
-            String message = controller.returnBook(selectedBook);
-            System.out.println(message);
-        } else {
-            System.out.println("Anulowano operację lub podano nieprawidłowy numer.");
+        System.out.print(languageManager.getMessage("return.choose"));
+
+        try {
+            int choice = Integer.parseInt(scanner.nextLine());
+            if (isValidChoice(choice, borrowedBooks.size())) {
+                Book selectedBook = borrowedBooks.get(choice - 1);
+                String message = controller.returnBook(selectedBook);
+                System.out.println(message);
+            } else {
+                System.out.println(languageManager.getMessage("return.canceled"));
+            }
+        } catch (NumberFormatException e) {
+            System.out.println(languageManager.getMessage("return.canceled"));
         }
     }
 
     private static void searchBooks(LibraryController controller, Scanner scanner) {
-        System.out.print("Podaj tytuł lub autora do wyszukania: ");
+        System.out.print(languageManager.getMessage("search.enter"));
         String query = scanner.nextLine();
         List<Book> results = controller.searchBooks(query);
         System.out.println(LibraryView.showBooks(results));
     }
 
     private static void addBook(LibraryController controller, Scanner scanner) {
-        System.out.print("Podaj tytuł nowej książki: ");
+        System.out.print(languageManager.getMessage("add.title"));
         String title = scanner.nextLine();
-        System.out.print("Podaj autora nowej książki: ");
+        System.out.print(languageManager.getMessage("add.author"));
         String author = scanner.nextLine();
         String message = controller.addBook(title, author);
         System.out.println(message);
