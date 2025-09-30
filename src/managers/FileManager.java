@@ -15,7 +15,7 @@ public class FileManager implements StorageHandler {
                 writer.println(book.getTitle() + "|" + book.getAuthor());
             }
         } catch (IOException e) {
-            System.out.println("Error while saving books: " + e.getMessage());
+            System.out.println("Błąd podczas zapisywania książek: " + e.getMessage());
         }
     }
 
@@ -34,7 +34,7 @@ public class FileManager implements StorageHandler {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error while loading books: " + e.getMessage());
+            System.out.println("Błąd podczas ładowania książek: " + e.getMessage());
         }
     }
 }

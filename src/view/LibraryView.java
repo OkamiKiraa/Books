@@ -1,7 +1,5 @@
 package view;
 
-import managers.LanguageManager;
-
 import model.Book;
 
 import java.util.Collection;
@@ -10,7 +8,7 @@ public class LibraryView {
 
     public static String showBooks(Collection<Book> books) {
         if (books.isEmpty()) {
-            return LanguageManager.getInstance().getMessage("search.no_results");
+            return "Brak książek spełniających kryteria.";
         }
         StringBuilder sb = new StringBuilder();
         int index = 1;
