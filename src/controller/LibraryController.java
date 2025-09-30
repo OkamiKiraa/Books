@@ -1,7 +1,10 @@
 package controller;
 
+import managers.LanguageManager;
+
 import model.Book;
 import model.Library;
+
 import view.BookView;
 
 import java.util.List;
@@ -9,9 +12,11 @@ import java.util.List;
 public class LibraryController {
 
     private final Library library;
+    private final LanguageManager languageManager;
 
     public LibraryController(Library library) {
         this.library = library;
+        this.languageManager = LanguageManager.getInstance();
     }
 
     public List<Book> searchBooks(String query) {
@@ -24,29 +29,29 @@ public class LibraryController {
 
     public String borrowBook(Book book) {
         if (library.isBorrowed(book)) {
-            return "Błąd: Ta książka jest już wypożyczona.";
+            return languageManager.getMessage("borrow.already");
         }
         if (library.borrowBook(book)) {
-            return String.format("Pomyślnie wypożyczono książkę: %s", BookView.showBook(book));
+            return languageManager.getMessage("borrow.success", BookView.showBook(book));
         }
-        return "Błąd: Nie udało się wypożyczyć książki.";
+        return languageManager.getMessage("borrow.failed");
     }
 
     public String returnBook(Book book) {
         if (library.returnBook(book)) {
-            return String.format("Pomyślnie zwrócono książkę: %s", BookView.showBook(book));
+            return languageManager.getMessage("return.success", BookView.showBook(book));
         }
-        return "Błąd: Tej książki nie było na liście wypożyczonych.";
+        return languageManager.getMessage("return.error");
     }
 
     public String addBook(String title, String author) {
         if (title.isBlank() || author.isBlank()) {
-            return "Błąd: Tytuł i autor nie mogą być puste.";
+            return languageManager.getMessage("add.empty");
         }
         if (library.addBook(title, author)) {
-            return String.format("Pomyślnie dodano książkę: \"%s\"", title);
+            return languageManager.getMessage("add.success", title);
         } else {
-            return "Błąd: Taka książka już istnieje w bibliotece.";
+            return languageManager.getMessage("add.exists");
         }
     }
 }
