@@ -2,6 +2,7 @@ package managers;
 
 import model.Book;
 import model.Library;
+
 import java.io.*;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public class FileManager implements StorageHandler {
                 writer.println(book.getTitle() + "|" + book.getAuthor());
             }
         } catch (IOException e) {
-            System.out.println("Error while saving books: " + e.getMessage());
+            System.out.println(AddMessageKey.ERROR_SAVE + e.getMessage());
         }
     }
 
@@ -34,7 +35,7 @@ public class FileManager implements StorageHandler {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error while loading books: " + e.getMessage());
+            System.out.println(AddMessageKey.ERROR_LOAD + e.getMessage());
         }
     }
 }

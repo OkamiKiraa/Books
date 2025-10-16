@@ -11,6 +11,14 @@ import managers.FileManager;
 import managers.StorageHandler;
 import managers.LanguageManager;
 import managers.SupportedLanguage;
+import managers.AddMessageKey;
+import managers.BorrowMessageKey;
+import managers.GeneralMessageKey;
+import managers.HelpMessageKey;
+import managers.LanguageMessageKey;
+import managers.MenuMessageKey;
+import managers.ReturnMessageKey;
+import managers.SearchMessageKey;
 
 public class Main {
     private static final String OPTION_BORROW = "1";
@@ -21,7 +29,7 @@ public class Main {
     private static final String OPTION_HELP = "6";
     private static final String OPTION_HELP_TEXT = "help";
 
-    private static LanguageManager languageManager;
+    private static LanguageManager languageManager = LanguageManager.getInstance();
 
     public static void main(String[] args) {
         languageManager = LanguageManager.getInstance();
@@ -34,8 +42,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println(languageManager.getMessage("menu.display"));
-            System.out.print(languageManager.getMessage("menu.choose"));
+            System.out.println(languageManager.getMessage(MenuMessageKey.DISPLAY));
+            System.out.print(languageManager.getMessage(MenuMessageKey.CHOOSE));
             String choice = scanner.nextLine();
 
             switch (choice) {
@@ -48,12 +56,12 @@ public class Main {
                 }
                 case OPTION_EXIT -> {
                     fileManager.saveBooks(library);
-                    System.out.println(languageManager.getMessage("general.goodbye"));
+                    System.out.println(languageManager.getMessage(GeneralMessageKey.GOODBYE));
                     scanner.close();
                     return;
                 }
                 case OPTION_HELP, OPTION_HELP_TEXT -> showHelp(scanner);
-                default -> System.out.println(languageManager.getMessage("general.invalid"));
+                default -> System.out.println(languageManager.getMessage(GeneralMessageKey.INVALID));
             }
             System.out.println();
         }
@@ -62,8 +70,8 @@ public class Main {
     private static void selectLanguage() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println(languageManager.getMessage("language.select"));
-        System.out.print(languageManager.getMessage("language.choice"));
+        System.out.println(languageManager.getMessage(LanguageMessageKey.SELECT));
+        System.out.print(languageManager.getMessage(LanguageMessageKey.CHOICE));
 
         String choice = scanner.nextLine();
 
@@ -75,24 +83,24 @@ public class Main {
     }
 
     private static void showHelp(Scanner scanner) {
-        System.out.println(languageManager.getMessage("help.display"));
-        System.out.print(languageManager.getMessage("help.press"));
+        System.out.println(languageManager.getMessage(HelpMessageKey.DISPLAY));
+        System.out.print(languageManager.getMessage(HelpMessageKey.PRESS));
         scanner.nextLine();
     }
 
     private static void borrowBook(LibraryController controller, Scanner scanner) {
-        System.out.print(languageManager.getMessage("borrow.enter"));
+        System.out.print(languageManager.getMessage(BorrowMessageKey.ENTER));
         String query = scanner.nextLine();
         List<Book> results = controller.searchBooks(query);
 
         if (results.isEmpty()) {
-            System.out.println(languageManager.getMessage("general.no_books_found"));
+            System.out.println(languageManager.getMessage(GeneralMessageKey.NO_BOOKS_FOUND));
             return;
         }
 
-        System.out.println(languageManager.getMessage("borrow.found"));
+        System.out.println(languageManager.getMessage(BorrowMessageKey.FOUND));
         System.out.println(LibraryView.showBooks(results));
-        System.out.print(languageManager.getMessage("borrow.choose"));
+        System.out.print(languageManager.getMessage(BorrowMessageKey.CHOOSE));
 
         try {
             int choice = Integer.parseInt(scanner.nextLine());
@@ -101,23 +109,23 @@ public class Main {
                 String message = controller.borrowBook(selectedBook);
                 System.out.println(message);
             } else {
-                System.out.println(languageManager.getMessage("borrow.canceled"));
+                System.out.println(languageManager.getMessage(BorrowMessageKey.CANCELED));
             }
         } catch (NumberFormatException e) {
-            System.out.println(languageManager.getMessage("borrow.canceled"));
+            System.out.println(languageManager.getMessage(BorrowMessageKey.CANCELED));
         }
     }
 
     private static void returnBook(LibraryController controller, Scanner scanner) {
         List<Book> borrowedBooks = controller.getBorrowedBooks();
         if (borrowedBooks.isEmpty()) {
-            System.out.println(languageManager.getMessage("return.no_books"));
+            System.out.println(languageManager.getMessage(ReturnMessageKey.NO_BOOKS));
             return;
         }
 
-        System.out.println(languageManager.getMessage("return.your_books"));
+        System.out.println(languageManager.getMessage(ReturnMessageKey.YOUR_BOOKS));
         System.out.println(LibraryView.showBooks(borrowedBooks));
-        System.out.print(languageManager.getMessage("return.choose"));
+        System.out.print(languageManager.getMessage(ReturnMessageKey.CHOOSE));
 
         try {
             int choice = Integer.parseInt(scanner.nextLine());
@@ -126,24 +134,24 @@ public class Main {
                 String message = controller.returnBook(selectedBook);
                 System.out.println(message);
             } else {
-                System.out.println(languageManager.getMessage("return.canceled"));
+                System.out.println(languageManager.getMessage(ReturnMessageKey.CANCELED));
             }
         } catch (NumberFormatException e) {
-            System.out.println(languageManager.getMessage("return.canceled"));
+            System.out.println(languageManager.getMessage(ReturnMessageKey.CANCELED));
         }
     }
 
     private static void searchBooks(LibraryController controller, Scanner scanner) {
-        System.out.print(languageManager.getMessage("search.enter"));
+        System.out.print(languageManager.getMessage(SearchMessageKey.ENTER));
         String query = scanner.nextLine();
         List<Book> results = controller.searchBooks(query);
         System.out.println(LibraryView.showBooks(results));
     }
 
     private static void addBook(LibraryController controller, Scanner scanner) {
-        System.out.print(languageManager.getMessage("add.title"));
+        System.out.print(languageManager.getMessage(AddMessageKey.TITLE));
         String title = scanner.nextLine();
-        System.out.print(languageManager.getMessage("add.author"));
+        System.out.print(languageManager.getMessage(AddMessageKey.AUTHOR));
         String author = scanner.nextLine();
         String message = controller.addBook(title, author);
         System.out.println(message);

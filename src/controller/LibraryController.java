@@ -1,6 +1,9 @@
 package controller;
 
+import managers.AddMessageKey;
+import managers.BorrowMessageKey;
 import managers.LanguageManager;
+import managers.ReturnMessageKey;
 
 import model.Book;
 import model.Library;
@@ -12,11 +15,11 @@ import java.util.List;
 public class LibraryController {
 
     private final Library library;
-    private final LanguageManager languageManager;
+    private static LanguageManager languageManager = LanguageManager.getInstance();
 
     public LibraryController(Library library) {
         this.library = library;
-        this.languageManager = LanguageManager.getInstance();
+        languageManager = LanguageManager.getInstance();
     }
 
     public List<Book> searchBooks(String query) {
@@ -29,29 +32,29 @@ public class LibraryController {
 
     public String borrowBook(Book book) {
         if (library.isBorrowed(book)) {
-            return languageManager.getMessage("borrow.already");
+            return languageManager.getMessage(BorrowMessageKey.ALREADY);
         }
         if (library.borrowBook(book)) {
-            return languageManager.getMessage("borrow.success", BookView.showBook(book));
+            return languageManager.getMessage(BorrowMessageKey.SUCCESS, BookView.showBook(book));
         }
-        return languageManager.getMessage("borrow.failed");
+        return languageManager.getMessage(BorrowMessageKey.FAILED);
     }
 
     public String returnBook(Book book) {
         if (library.returnBook(book)) {
-            return languageManager.getMessage("return.success", BookView.showBook(book));
+            return languageManager.getMessage(ReturnMessageKey.SUCCESS, BookView.showBook(book));
         }
-        return languageManager.getMessage("return.error");
+        return languageManager.getMessage(ReturnMessageKey.ERROR);
     }
 
     public String addBook(String title, String author) {
         if (title.isBlank() || author.isBlank()) {
-            return languageManager.getMessage("add.empty");
+            return languageManager.getMessage(AddMessageKey.EMPTY);
         }
         if (library.addBook(title, author)) {
-            return languageManager.getMessage("add.success", title);
+            return languageManager.getMessage(AddMessageKey.SUCCESS, title);
         } else {
-            return languageManager.getMessage("add.exists");
+            return languageManager.getMessage(AddMessageKey.EXISTS);
         }
     }
 }

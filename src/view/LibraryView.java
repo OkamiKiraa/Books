@@ -1,16 +1,19 @@
 package view;
 
 import managers.LanguageManager;
+import managers.SearchMessageKey;
 
 import model.Book;
 
 import java.util.Collection;
 
 public class LibraryView {
+    private LibraryView(){}
+    private static final LanguageManager languageManager = LanguageManager.getInstance();
 
     public static String showBooks(Collection<Book> books) {
         if (books.isEmpty()) {
-            return LanguageManager.getInstance().getMessage("search.no_results");
+            return LanguageManager.getInstance().getMessage(SearchMessageKey.NO_RESULTS);
         }
         StringBuilder sb = new StringBuilder();
         int index = 1;
