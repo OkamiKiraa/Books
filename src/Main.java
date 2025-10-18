@@ -1,26 +1,24 @@
 import controller.LibraryController;
-
-import model.Book;
-import model.Library;
-import view.LibraryView;
-
 import java.util.List;
 import java.util.Scanner;
-
-import managers.FileManager;
-import managers.StorageHandler;
-import managers.LanguageManager;
-import managers.SupportedLanguage;
 import managers.AddMessageKey;
 import managers.BorrowMessageKey;
+import managers.FileManager;
 import managers.GeneralMessageKey;
 import managers.HelpMessageKey;
+import managers.LanguageManager;
 import managers.LanguageMessageKey;
 import managers.MenuMessageKey;
 import managers.ReturnMessageKey;
 import managers.SearchMessageKey;
+import managers.StorageHandler;
+import managers.SupportedLanguage;
+import model.Book;
+import model.Library;
+import view.LibraryView;
 
 public class Main {
+
     private static final String OPTION_BORROW = "1";
     private static final String OPTION_RETURN = "2";
     private static final String OPTION_SEARCH = "3";
@@ -61,7 +59,8 @@ public class Main {
                     return;
                 }
                 case OPTION_HELP, OPTION_HELP_TEXT -> showHelp(scanner);
-                default -> System.out.println(languageManager.getMessage(GeneralMessageKey.INVALID));
+                default ->
+                        System.out.println(languageManager.getMessage(GeneralMessageKey.INVALID));
             }
             System.out.println();
         }

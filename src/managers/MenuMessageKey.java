@@ -1,16 +1,17 @@
 package managers;
 
-public enum MenuMessageKey {
-  DISPLAY("menu.display"),
-  CHOOSE("menu.choose");
+public enum MenuMessageKey implements MessageKey {
+    DISPLAY("menu.display"),
+    CHOOSE("menu.choose");
 
-  private final String key;
+    private final String key;
 
-  MenuMessageKey(String key) {
-    this.key = key;
-  }
+    MenuMessageKey(String key) {
+        this.key = key;
+    }
 
-  public String getKey() {
-    return key;
-  }
+    @Override
+    public String getKey() {
+        return key;
+    }
 }

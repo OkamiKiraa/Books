@@ -1,8 +1,6 @@
 package managers;
-
 import java.util.Locale;
 import java.util.ResourceBundle;
-
 
 public class LanguageManager {
     private static LanguageManager instance;
@@ -12,7 +10,7 @@ public class LanguageManager {
         setLanguage(SupportedLanguage.ENGLISH);
     }
 
-    public static LanguageManager getInstance() {
+    public static synchronized LanguageManager getInstance() {
         if (instance == null) {
             instance = new LanguageManager();
         }
@@ -24,51 +22,15 @@ public class LanguageManager {
         bundle = ResourceBundle.getBundle("messages", locale);
     }
 
-    public String getMessage(MenuMessageKey key) {
+    public String getMessage(MessageKey key) {
         return getMessage(key.getKey());
     }
 
-    public String getMessage(HelpMessageKey key) {
-        return getMessage(key.getKey());
-    }
-
-    public String getMessage(BorrowMessageKey key) {
-        return getMessage(key.getKey());
-    }
-
-    public String getMessage(BorrowMessageKey key, Object... args) {
+    public String getMessage(MessageKey key, Object... args) {
         return getMessage(key.getKey(), args);
     }
 
-    public String getMessage(ReturnMessageKey key) {
-        return getMessage(key.getKey());
-    }
-
-    public String getMessage(ReturnMessageKey key, Object... args) {
-        return getMessage(key.getKey(), args);
-    }
-
-    public String getMessage(SearchMessageKey key) {
-        return getMessage(key.getKey());
-    }
-
-    public String getMessage(AddMessageKey key) {
-        return getMessage(key.getKey());
-    }
-
-    public String getMessage(AddMessageKey key, Object... args) {
-        return getMessage(key.getKey(), args);
-    }
-
-    public String getMessage(GeneralMessageKey key) {
-        return getMessage(key.getKey());
-    }
-
-    public String getMessage(LanguageMessageKey key) {
-        return getMessage(key.getKey());
-    }
-
-    public String getMessage(String key) {
+    private String getMessage(String key) {
         try {
             return bundle.getString(key);
         } catch (Exception e) {
@@ -76,7 +38,7 @@ public class LanguageManager {
         }
     }
 
-    public String getMessage(String key, Object... args) {
+    private String getMessage(String key, Object... args) {
         try {
             String message = bundle.getString(key);
             return String.format(message, args);

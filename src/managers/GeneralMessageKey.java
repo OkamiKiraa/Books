@@ -1,17 +1,19 @@
 package managers;
 
-public enum GeneralMessageKey {
-  GOODBYE("general.goodbye"),
-  INVALID("general.invalid"),
-  NO_BOOKS_FOUND("general.no_books_found");
+public enum GeneralMessageKey implements MessageKey {
+    GOODBYE("general.goodbye"),
+    INVALID("general.invalid"),
+    NO_BOOKS_FOUND("general.no_books_found"),
+    BOOK_DISPLAY("general.book_display");
 
-  private final String key;
+    private final String key;
 
-  GeneralMessageKey(String key) {
-    this.key = key;
-  }
+    GeneralMessageKey(String key) {
+        this.key = key;
+    }
 
-  public String getKey() {
-    return key;
-  }
+    @Override
+    public String getKey() {
+        return key;
+    }
 }

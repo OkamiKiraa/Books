@@ -1,15 +1,16 @@
 package view;
 
+import java.util.Collection;
 import managers.LanguageManager;
 import managers.SearchMessageKey;
-
 import model.Book;
 
-import java.util.Collection;
-
 public class LibraryView {
-    private LibraryView(){}
+
     private static final LanguageManager languageManager = LanguageManager.getInstance();
+
+    private LibraryView() {
+    }
 
     public static String showBooks(Collection<Book> books) {
         if (books.isEmpty()) {

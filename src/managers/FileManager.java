@@ -1,12 +1,17 @@
 package managers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Set;
 import model.Book;
 import model.Library;
 
-import java.io.*;
-import java.util.Set;
-
 public class FileManager implements StorageHandler {
+
     private static final String BOOKS_FILE = "books.txt";
 
     public void saveBooks(Library library) {

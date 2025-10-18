@@ -1,21 +1,18 @@
 package controller;
 
+import java.util.List;
 import managers.AddMessageKey;
 import managers.BorrowMessageKey;
 import managers.LanguageManager;
 import managers.ReturnMessageKey;
-
 import model.Book;
 import model.Library;
-
 import view.BookView;
-
-import java.util.List;
 
 public class LibraryController {
 
-    private final Library library;
     private static LanguageManager languageManager = LanguageManager.getInstance();
+    private final Library library;
 
     public LibraryController(Library library) {
         this.library = library;

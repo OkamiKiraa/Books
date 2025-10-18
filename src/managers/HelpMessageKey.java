@@ -1,16 +1,17 @@
 package managers;
 
-public enum HelpMessageKey {
-  DISPLAY("help.display"),
-  PRESS("help.press");
+public enum HelpMessageKey implements MessageKey {
+    DISPLAY("help.display"),
+    PRESS("help.press");
 
-  private final String key;
+    private final String key;
 
-  HelpMessageKey(String key) {
-    this.key = key;
-  }
+    HelpMessageKey(String key) {
+        this.key = key;
+    }
 
-  public String getKey() {
-    return key;
-  }
+    @Override
+    public String getKey() {
+        return key;
+    }
 }
