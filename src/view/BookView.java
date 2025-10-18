@@ -1,10 +1,17 @@
 package view;
 
+import managers.GeneralMessageKey;
+import managers.LanguageManager;
+
 import model.Book;
 
 public class BookView {
 
+    private BookView() {
+    }
+
     public static String showBook(Book book) {
-        return String.format("\"%s\" by %s", book.getTitle(), book.getAuthor());
+        LanguageManager languageManager = LanguageManager.getInstance();
+        return languageManager.getMessage(GeneralMessageKey.BOOK_DISPLAY, book.getTitle(), book.getAuthor());
     }
 }

@@ -1,11 +1,17 @@
 package managers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Set;
 import model.Book;
 import model.Library;
-import java.io.*;
-import java.util.Set;
 
 public class FileManager implements StorageHandler {
+
     private static final String BOOKS_FILE = "books.txt";
 
     public void saveBooks(Library library) {
@@ -15,7 +21,7 @@ public class FileManager implements StorageHandler {
                 writer.println(book.getTitle() + "|" + book.getAuthor());
             }
         } catch (IOException e) {
-            System.out.println("Błąd podczas zapisywania książek: " + e.getMessage());
+            System.out.println(AddMessageKey.ERROR_SAVE + e.getMessage());
         }
     }
 
@@ -34,7 +40,7 @@ public class FileManager implements StorageHandler {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Błąd podczas ładowania książek: " + e.getMessage());
+            System.out.println(AddMessageKey.ERROR_LOAD + e.getMessage());
         }
     }
 }

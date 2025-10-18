@@ -1,13 +1,17 @@
 package controller;
 
+import java.util.List;
+import managers.AddMessageKey;
+import managers.BorrowMessageKey;
+import managers.LanguageManager;
+import managers.ReturnMessageKey;
 import model.Book;
 import model.Library;
 import view.BookView;
 
-import java.util.List;
-
 public class LibraryController {
 
+    private static final LanguageManager languageManager = LanguageManager.getInstance();
     private final Library library;
 
     public LibraryController(Library library) {
@@ -24,29 +28,29 @@ public class LibraryController {
 
     public String borrowBook(Book book) {
         if (library.isBorrowed(book)) {
-            return "Błąd: Ta książka jest już wypożyczona.";
+            return languageManager.getMessage(BorrowMessageKey.ALREADY);
         }
         if (library.borrowBook(book)) {
-            return String.format("Pomyślnie wypożyczono książkę: %s", BookView.showBook(book));
+            return languageManager.getMessage(BorrowMessageKey.SUCCESS, BookView.showBook(book));
         }
-        return "Błąd: Nie udało się wypożyczyć książki.";
+        return languageManager.getMessage(BorrowMessageKey.FAILED);
     }
 
     public String returnBook(Book book) {
         if (library.returnBook(book)) {
-            return String.format("Pomyślnie zwrócono książkę: %s", BookView.showBook(book));
+            return languageManager.getMessage(ReturnMessageKey.SUCCESS, BookView.showBook(book));
         }
-        return "Błąd: Tej książki nie było na liście wypożyczonych.";
+        return languageManager.getMessage(ReturnMessageKey.ERROR);
     }
 
     public String addBook(String title, String author) {
         if (title.isBlank() || author.isBlank()) {
-            return "Błąd: Tytuł i autor nie mogą być puste.";
+            return languageManager.getMessage(AddMessageKey.EMPTY);
         }
         if (library.addBook(title, author)) {
-            return String.format("Pomyślnie dodano książkę: \"%s\"", title);
+            return languageManager.getMessage(AddMessageKey.SUCCESS, title);
         } else {
-            return "Błąd: Taka książka już istnieje w bibliotece.";
+            return languageManager.getMessage(AddMessageKey.EXISTS);
         }
     }
 }

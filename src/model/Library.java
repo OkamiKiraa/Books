@@ -1,6 +1,7 @@
 package model;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Library {
 
@@ -37,11 +38,6 @@ public class Library {
         return matches;
     }
 
-    private static boolean bookMatchesQuery(Book book, String lowerQuery) {
-        return book.getTitle().toLowerCase().contains(lowerQuery) ||
-                book.getAuthor().toLowerCase().contains(lowerQuery);
-    }
-
     public Set<Book> getBorrowedBooks() {
         return borrowedBooks;
     }
@@ -52,5 +48,10 @@ public class Library {
 
     public Set<Book> getAllBooks() {
         return books;
+    }
+
+    private static boolean bookMatchesQuery(Book book, String lowerQuery) {
+        return book.getTitle().toLowerCase().contains(lowerQuery) ||
+                book.getAuthor().toLowerCase().contains(lowerQuery);
     }
 }
