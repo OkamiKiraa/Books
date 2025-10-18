@@ -11,12 +11,11 @@ import view.BookView;
 
 public class LibraryController {
 
-    private static LanguageManager languageManager = LanguageManager.getInstance();
+    private static final LanguageManager languageManager = LanguageManager.getInstance();
     private final Library library;
 
     public LibraryController(Library library) {
         this.library = library;
-        languageManager = LanguageManager.getInstance();
     }
 
     public List<Book> searchBooks(String query) {

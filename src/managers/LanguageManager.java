@@ -3,6 +3,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LanguageManager {
+
     private static LanguageManager instance;
     private ResourceBundle bundle;
 
@@ -10,7 +11,7 @@ public class LanguageManager {
         setLanguage(SupportedLanguage.ENGLISH);
     }
 
-    public static synchronized LanguageManager getInstance() {
+    public static LanguageManager getInstance() {
         if (instance == null) {
             instance = new LanguageManager();
         }

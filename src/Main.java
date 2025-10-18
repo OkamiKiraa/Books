@@ -26,11 +26,11 @@ public class Main {
     private static final String OPTION_EXIT = "5";
     private static final String OPTION_HELP = "6";
     private static final String OPTION_HELP_TEXT = "help";
+    private static final String OPTION_LANGUAGE_POLISH = "2";
 
-    private static LanguageManager languageManager = LanguageManager.getInstance();
+    private static final LanguageManager languageManager = LanguageManager.getInstance();
 
     public static void main(String[] args) {
-        languageManager = LanguageManager.getInstance();
         selectLanguage();
 
         Library library = new Library();
@@ -74,7 +74,7 @@ public class Main {
 
         String choice = scanner.nextLine();
 
-        if ("2".equals(choice)) {
+        if (OPTION_LANGUAGE_POLISH.equals(choice)) {
             languageManager.setLanguage(SupportedLanguage.POLISH);
         } else {
             languageManager.setLanguage(SupportedLanguage.ENGLISH);
