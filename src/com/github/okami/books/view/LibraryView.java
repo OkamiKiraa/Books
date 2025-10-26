@@ -14,7 +14,7 @@ public class LibraryView {
 
     public static String showBooks(Collection<Book> books) {
         if (books.isEmpty()) {
-            return LanguageManager.getInstance().getMessage(SearchMessageKey.NO_RESULTS);
+            return languageManager.getMessage(SearchMessageKey.NO_RESULTS);
         }
         StringBuilder sb = new StringBuilder();
         int index = 1;
