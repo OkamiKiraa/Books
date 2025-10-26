@@ -27,7 +27,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>Main</mainClass>
+              <mainClass>com.github.okami.books.Main</mainClass>
             </manifest>
           </archive>
         </configuration>
