@@ -1,13 +1,13 @@
-package controller;
+package com.github.okami.books.controller;
 
+import com.github.okami.books.managers.AddMessageKey;
+import com.github.okami.books.managers.BorrowMessageKey;
+import com.github.okami.books.managers.LanguageManager;
+import com.github.okami.books.managers.ReturnMessageKey;
+import com.github.okami.books.model.Book;
+import com.github.okami.books.model.Library;
+import com.github.okami.books.view.BookView;
 import java.util.List;
-import managers.AddMessageKey;
-import managers.BorrowMessageKey;
-import managers.LanguageManager;
-import managers.ReturnMessageKey;
-import model.Book;
-import model.Library;
-import view.BookView;
 
 public class LibraryController {
 

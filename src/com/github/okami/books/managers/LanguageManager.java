@@ -1,4 +1,5 @@
-package managers;
+package com.github.okami.books.managers;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 

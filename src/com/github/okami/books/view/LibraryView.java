@@ -1,9 +1,9 @@
-package view;
+package com.github.okami.books.view;
 
+import com.github.okami.books.managers.LanguageManager;
+import com.github.okami.books.managers.SearchMessageKey;
+import com.github.okami.books.model.Book;
 import java.util.Collection;
-import managers.LanguageManager;
-import managers.SearchMessageKey;
-import model.Book;
 
 public class LibraryView {
 

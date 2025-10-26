@@ -1,21 +1,23 @@
-import controller.LibraryController;
+package com.github.okami.books;
+
+import com.github.okami.books.controller.LibraryController;
+import com.github.okami.books.managers.AddMessageKey;
+import com.github.okami.books.managers.BorrowMessageKey;
+import com.github.okami.books.managers.FileManager;
+import com.github.okami.books.managers.GeneralMessageKey;
+import com.github.okami.books.managers.HelpMessageKey;
+import com.github.okami.books.managers.LanguageManager;
+import com.github.okami.books.managers.LanguageMessageKey;
+import com.github.okami.books.managers.MenuMessageKey;
+import com.github.okami.books.managers.ReturnMessageKey;
+import com.github.okami.books.managers.SearchMessageKey;
+import com.github.okami.books.managers.StorageHandler;
+import com.github.okami.books.managers.SupportedLanguage;
+import com.github.okami.books.model.Book;
+import com.github.okami.books.model.Library;
+import com.github.okami.books.view.LibraryView;
 import java.util.List;
 import java.util.Scanner;
-import managers.AddMessageKey;
-import managers.BorrowMessageKey;
-import managers.FileManager;
-import managers.GeneralMessageKey;
-import managers.HelpMessageKey;
-import managers.LanguageManager;
-import managers.LanguageMessageKey;
-import managers.MenuMessageKey;
-import managers.ReturnMessageKey;
-import managers.SearchMessageKey;
-import managers.StorageHandler;
-import managers.SupportedLanguage;
-import model.Book;
-import model.Library;
-import view.LibraryView;
 
 public class Main {
 

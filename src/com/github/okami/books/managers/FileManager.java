@@ -1,5 +1,7 @@
-package managers;
+package com.github.okami.books.managers;
 
+import com.github.okami.books.model.Book;
+import com.github.okami.books.model.Library;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -7,8 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Set;
-import model.Book;
-import model.Library;
 
 public class FileManager implements StorageHandler {
 

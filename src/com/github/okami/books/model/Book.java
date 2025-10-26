@@ -1,4 +1,4 @@
-package model;
+package com.github.okami.books.model;
 
 import java.util.Objects;
 

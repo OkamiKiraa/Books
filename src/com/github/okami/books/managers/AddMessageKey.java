@@ -1,4 +1,4 @@
-package managers;
+package com.github.okami.books.managers;
 
 public enum AddMessageKey implements MessageKey {
     TITLE("add.title"),

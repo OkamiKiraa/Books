@@ -1,4 +1,4 @@
-package managers;
+package com.github.okami.books.managers;
 
 public enum MenuMessageKey implements MessageKey {
     DISPLAY("menu.display"),
