@@ -1,4 +1,4 @@
-package model;
+package com.github.okami.books.model;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,6 +7,11 @@ public class Library {
 
     private final Set<Book> books = new HashSet<>();
     private final Set<Book> borrowedBooks = new HashSet<>();
+
+    private static boolean bookMatchesQuery(Book book, String lowerQuery) {
+        return book.getTitle().toLowerCase().contains(lowerQuery) ||
+                book.getAuthor().toLowerCase().contains(lowerQuery);
+    }
 
     public boolean addBook(String title, String author) {
         return books.add(Book.of(title, author));
@@ -48,10 +53,5 @@ public class Library {
 
     public Set<Book> getAllBooks() {
         return books;
-    }
-
-    private static boolean bookMatchesQuery(Book book, String lowerQuery) {
-        return book.getTitle().toLowerCase().contains(lowerQuery) ||
-                book.getAuthor().toLowerCase().contains(lowerQuery);
     }
 }

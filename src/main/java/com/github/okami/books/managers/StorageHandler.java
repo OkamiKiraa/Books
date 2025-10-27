@@ -1,6 +1,6 @@
-package managers;
+package com.github.okami.books.managers;
 
-import model.Library;
+import com.github.okami.books.model.Library;
 
 public interface StorageHandler {
 
